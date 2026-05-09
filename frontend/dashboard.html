@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="dashboard-container">
+    <h2 id="welcomeText"></h2>
+
+    <input type="text" id="titleInput" placeholder="Enter note title..">
+    <textarea
+      id="noteInput" 
+      placeholder="Write your note here..."
+      oninput="updateCharCount()"
+      maxlength="500"
+    ></textarea>
+    <p id="charCount">0/500 characters</p>
+
+    <button id="addBtn" onclick="addNote()">Add Note</button>
+
+    <input 
+      type="text"
+      id="searchInput"
+      placeholder="Search notes..."
+      onkeyup="loadNotes()"
+    />
+    <button class="small-btn" onclick="clearSearch()">Clear Search</button>
+
+    <p id="noteCount"></p>
+
+    <div id="notesContainer" class="notes-container"></div>
+
+    <button onclick="logout()">Logout</button>
+
+  </div>
+<script src="script.js"></script>
+
+</body>
+</html>
