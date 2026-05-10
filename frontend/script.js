@@ -60,6 +60,11 @@ async function getProfile() {
 }
 
 function logout() {
+  const confirmLogout = confirm("Are you sure you want to logout?");
+
+  if (!confirmLogout) {
+    return;
+  }
   localStorage.removeItem("token");
   window.location.href = "index.html";
 }
@@ -295,8 +300,15 @@ function clearSearch() {
   loadNotes();
 }
 
+function handleSearchKey(event) {
+  if (event.key === "Enter") {
+    loadNotes();
+  }
+}
+
 if (window.location.pathname.includes("dashboard.html")) {
   checkAuth();
   loadNotes();
   showWelcome();
+  document.getElementById("noteInput").focus();
 }
