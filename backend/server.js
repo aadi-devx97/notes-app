@@ -13,7 +13,9 @@ const PORT = process.env.PORT || 3000;
 const SECRET_KEY = process.env.JWT_SECRET;
 
 //middleware to enable cors
-app.use(cors());            
+app.use(cors({
+    origin: "*"  //allow all origin
+}));
 app.use(express.json());  
 
 function getUsers() {

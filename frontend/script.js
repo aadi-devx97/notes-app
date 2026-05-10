@@ -1,4 +1,4 @@
-﻿const BASE_URL = "http://localhost:3000";
+﻿const BASE_URL = "https://notes-app-backend-wwli.onrender.com";
 
 async function signup() {
   const username = document.getElementById("username").value;
