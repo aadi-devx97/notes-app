@@ -99,10 +99,9 @@ node server.js
 ```
 
 ## 6. Run Frontend
-
+```
 Open frontend files using Live Server.
 ```
-
 ---
 
 # 🌍 Live Demo
