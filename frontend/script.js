@@ -1,6 +1,11 @@
 ﻿const BASE_URL = "https://notes-app-backend-wwli.onrender.com";
 
 async function signup() {
+  const signupBtn = document.getElementById("signupBtn");
+
+  signupBtn.innerText = "Creating account...";
+  signupBtn.disabled = true;
+
   const username = document.getElementById("username").value;
   const password = document.getElementById("password").value;
 
@@ -19,9 +24,17 @@ async function signup() {
   if (data.message === "User created successfully") {
     window.location.href = "index.html";
   }
+
+  signupBtn.innerText = "Signup";
+  signupBtn.disabled = false;
 }
 
 async function login() {
+  const loginBtn = document.getElementById("loginBtn");
+
+  loginBtn.innerText = "Logging in...";
+  loginBtn.disabled = true;
+
   const username = document.getElementById("loginUsername").value;
   const password = document.getElementById("loginPassword").value;
 
@@ -42,6 +55,9 @@ async function login() {
     localStorage.setItem("username", username);
     window.location.href = "dashboard.html";
   }
+
+  loginBtn.innerText = "Login";
+  loginBtn.disabled = false;
 }
 
 async function getProfile() {
@@ -145,6 +161,14 @@ async function loadNotes() {
     return;
   }
 
+  const container = document.getElementById("notesContainer");
+
+  container.innerHTML = `
+  <p class="empty-message">
+    Loading notes...
+  </p>
+  `;
+
   const res = await fetch(`${BASE_URL}/notes`, {
     headers: {
       "Authorization": `Bearer ${token}`
@@ -157,7 +181,7 @@ async function loadNotes() {
   }
 
   const searchValue = searchElement ? searchElement.value.toLowerCase() : "";
-  const container = document.getElementById("notesContainer");
+  
 
   if (!container) {
     return;
