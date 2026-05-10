@@ -4,6 +4,8 @@ A full-stack authenticated notes application built using Node.js, Express, JavaS
 
 This project was built as part of my full-stack development journey to learn authentication systems, CRUD architecture, frontend/backend integration, and real-world project structuring.
 
+---
+
 #  Features
 
 - User Signup/Login System
@@ -18,6 +20,8 @@ This project was built as part of my full-stack development journey to learn aut
 - Responsive Dark UI
 - Loading States
 - Validation System
+
+---
 
 # 🛠 Tech Stack
 
@@ -37,6 +41,8 @@ This project was built as part of my full-stack development journey to learn aut
 
 ## Storage
 - JSON-based local storage
+
+---
 
 # 📂 Project Structure
 
