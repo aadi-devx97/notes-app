@@ -212,7 +212,7 @@ app.put("/notes/:id", verifyToken, (req, res) => {
 
     const noteId = Number(req.params.id);
 
-    const { text } = req.body;
+    const { title, text } = req.body;
 
     const notes = getNotes();
 
@@ -228,6 +228,7 @@ app.put("/notes/:id", verifyToken, (req, res) => {
         });
     }
 
+    notes[noteIndex].title = title;
     notes[noteIndex].text = text;
 
     saveNotes(notes);
