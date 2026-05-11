@@ -72,7 +72,7 @@ app.get("/profile", verifyToken, (req, res) => {
 
 //test route
 app.get("/", (req, res) => {
-  res.send("Notes API working");    
+  res.send("Server is running");    
 });
 
 //sign up route.
