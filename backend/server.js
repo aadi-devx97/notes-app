@@ -2,10 +2,10 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const fs = require("fs");
-const path = require("path");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const User = require("./models/User");
+const Note = require("./models/Note");
 
 //creating server here
 const app = express();                      
@@ -22,30 +22,6 @@ app.use(cors({
     origin: "*"  //allow all origin
 }));
 app.use(express.json());  
-
-function getUsers() {
-    const filePath = path.join(__dirname, "data", "users.json");
-    return JSON.parse(fs.readFileSync(filePath));
-}
-
-function saveUsers(users) {
-    const filePath = path.join(__dirname, "data", "users.json");
-    fs.writeFileSync(filePath, JSON.stringify(users, null, 2));
-}
-
-function getNotes() {
-    const filePath = path.join(__dirname, "data", "notes.json");
-
-    const data = fs.readFileSync(filePath, "utf-8");
-
-    return JSON.parse(data);
-}
-
-function saveNotes(notes) {
-    const filePath = path.join(__dirname, "data", "notes.json");
-
-    fs.writeFileSync(filePath, JSON.stringify(notes, null, 2));
-}
 
 function verifyToken(req, res, next) {
     const authHeader = req.headers["authorization"];
@@ -82,15 +58,14 @@ app.get("/", (req, res) => {
 
 //sign up route.
 app.post("/signup", async (req, res) => {
+
     const { username, password } = req.body;
 
     if (!username || !password) {
         return res.json({ message: "Missing fields" });
     }
 
-    const users = getUsers();
-
-    const userExists = users.find(u => u.username === username);
+    const userExists = await User.findOne({ username });
 
     if (userExists) {
         return res.json({ message: "User already exists" });
@@ -98,16 +73,13 @@ app.post("/signup", async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = {
-        id: Date.now(),
+    await User.create({
         username,
         password: hashedPassword
-    };
-
-    users.push(newUser);
-    saveUsers(users);
+    });
 
     res.json({ message: "User created successfully" });
+
 });
 
 //login route
@@ -119,10 +91,7 @@ app.post("/login", async (req, res) => {
         return res.json({ message: "Missing fields" });
     }
 
-    const users = getUsers();
-
-    // find user
-    const user = users.find(u => u.username === username);
+    const user = await User.findOne({ username });
 
     // if not found
     if (!user) {
@@ -150,7 +119,7 @@ app.post("/login", async (req, res) => {
 });
 
 //note creation route
-app.post("/notes", verifyToken, (req, res) => {
+app.post("/notes", verifyToken, async (req, res) => {
 
     const { title, text } = req.body;
 
@@ -158,88 +127,80 @@ app.post("/notes", verifyToken, (req, res) => {
         return res.json({ message: "Note text required" });
     }
 
-    const notes = getNotes();
-
-    const newNote = {
-        id: Date.now(),
-        title: title,
-        text: text,
-        username: req.user.username,
-        createdAt: new Date().toISOString()
-    };
-
-    notes.push(newNote);
-
-    saveNotes(notes);
+    const newNote = await Note.create({
+        title,
+        text,
+        username: req.user.username
+    });
 
     res.json({
         message: "Note added successfully",
         note: newNote
     });
+
 });
 
 //get notes route
-app.get("/notes", verifyToken, (req, res) => {
+app.get("/notes", verifyToken, async (req, res) => {
 
-    const notes = getNotes();
-
-    const userNotes = notes.filter(
-        note => note.username === req.user.username
-    );
+    const userNotes = await Note.find({
+        username: req.user.username
+    });
 
     res.json(userNotes);
 });
 
 //delete note route
-app.delete("/notes/:id", verifyToken, (req, res) => {
+app.delete("/notes/:id", verifyToken, async (req, res) => {
 
-    const noteId = Number(req.params.id);
+    const noteId = req.params.id;
 
-    let notes = getNotes();
-
-    notes = notes.filter(note => {
-        return !(
-            note.id === noteId &&
-            note.username === req.user.username
-        );
+    const deletedNote = await Note.findOneAndDelete({
+        _id: noteId,
+        username: req.user.username
     });
 
-    saveNotes(notes);
+    if (!deletedNote) {
+        return res.json({
+            message: "Note not found"
+        });
+    }
 
     res.json({
         message: "Note deleted successfully"
     });
 
 });
-
 // update note route
-app.put("/notes/:id", verifyToken, (req, res) => {
+app.put("/notes/:id", verifyToken, async (req, res) => {
 
-    const noteId = Number(req.params.id);
+    const noteId = req.params.id;
 
     const { title, text } = req.body;
 
-    const notes = getNotes();
-
-    const noteIndex = notes.findIndex(
-        note =>
-            note.id === noteId &&
-            note.username === req.user.username
+    const updatedNote = await Note.findOneAndUpdate(
+        {
+            _id: noteId,
+            username: req.user.username
+        },
+        {
+            title,
+            text
+        },
+        {
+            new: true
+        }
     );
 
-    if (noteIndex === -1) {
+    if (!updatedNote) {
         return res.json({
             message: "Note not found"
         });
     }
 
-    notes[noteIndex].title = title;
-    notes[noteIndex].text = text;
-
-    saveNotes(notes);
-
     res.json({
-        message: "Note updated successfully"
+        message: "Note updated successfully",
+        note: updatedNote
     });
 
 });
