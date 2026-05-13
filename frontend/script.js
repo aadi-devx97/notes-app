@@ -233,8 +233,8 @@ async function loadNotes() {
         <h3>${title}</h3>
         <p>${text}</p>
         <small>${createdAt.toLocaleString()}</small>
-        <button onclick='editNote("${note._id}", ${JSON.stringify(text)}, ${JSON.stringify(title)})'>Edit</button>
-        <button onclick='deleteNote("${note._id}")'>Delete</button>
+        <button onclick='editNote(${JSON.stringify(note._id)}, ${JSON.stringify(text)}, ${JSON.stringify(title)})'>Edit</button>
+        <button onclick='deleteNote(${JSON.stringify(note._id)})'>Delete</button>
       </div>
     `;
   });
