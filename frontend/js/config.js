@@ -1,0 +1,1 @@
+const BASE_URL = "https://notes-app-backend-wwli.onrender.com";
