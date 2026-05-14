@@ -20,6 +20,7 @@ This project was built as part of my full-stack development journey to learn aut
 - Responsive Dark UI
 - Loading States
 - Validation System
+- MongoDB cloud storage
 
 ---
 
@@ -38,29 +39,50 @@ This project was built as part of my full-stack development journey to learn aut
 - JWT (jsonwebtoken)
 - bcrypt
 - dotenv
+- MongoDB Atlas
+- Mongoose
 
 ## Storage
-- JSON-based local storage
+- MongoDB Atlas (Cloud DataBase)
+- Mongoose ODM
 
 ---
 
-# 📂 Project Structure
+# 📁 Project Structure
 
 ```bash
 notes-app/
-│
+
 ├── frontend/
 │   ├── dashboard.html
 │   ├── index.html
 │   ├── signup.html
-│   ├── script.js
-│   └── style.css
+│   ├── style.css
+│   │
+│   └── js/
+│       ├── auth.js
+│       ├── config.js
+│       ├── notes.js
+│       └── utils.js
 │
 ├── backend/
+│   ├── config/
+│   │   └── db.js
+│   │
+│   ├── middleware/
+│   │   └── authMiddleware.js
+│   │
+│   ├── models/
+│   │   ├── Note.js
+│   │   └── User.js
+│   │
+│   ├── routes/
+│   │   ├── authRoutes.js
+│   │   └── noteRoutes.js
+│   │
 │   ├── server.js
-│   ├── users.json
-│   ├── notes.json
 │   ├── package.json
+│   ├── package-lock.json
 │   └── .env
 │
 ├── .gitignore
@@ -74,7 +96,7 @@ notes-app/
 ## 1. Clone Repository
 
 ```bash
-git clone <your-repo-link>
+git clone <https://github.com/aadi-devx97/notes-app>
 ```
 
 ## 2. Open Project
