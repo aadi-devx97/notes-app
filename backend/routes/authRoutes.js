@@ -25,13 +25,17 @@ router.post("/signup", async (req, res) => {
     const { username, password } = req.body;
 
     if (!username || !password) {
-        return res.json({ message: "Missing fields" });
+        return res.status(400).json({
+            message: "Missing fields"
+        })
     }
 
     const userExists = await User.findOne({ username });
 
     if (userExists) {
-        return res.json({ message: "User already exists" });
+        return res.status(409).json({
+            message: "User already exists"
+        });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -41,7 +45,9 @@ router.post("/signup", async (req, res) => {
         password: hashedPassword
     });
 
-    res.json({ message: "User created successfully" });
+    res.status(201).json({
+        message: "User created successfully"
+    });
 
 });
 
@@ -51,21 +57,27 @@ router.post("/login", async (req, res) => {
 
     // check empty
     if (!username || !password) {
-        return res.json({ message: "Missing fields" });
+        return res.status(400).json({
+            message: "Missing fields"
+        })
     }
 
     const user = await User.findOne({ username });
 
     // if not found
     if (!user) {
-        return res.json({ message: "User not found" });
+        return res.status(404).json({
+            message: "User not found"
+        });
     }
 
     // check password
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-        return res.json({ message: "Wrong password" });
+        return res.status(401).json({
+            message: "Wrong password"
+        });
     }
 
     // success
@@ -75,7 +87,7 @@ router.post("/login", async (req, res) => {
         { expiresIn: "1h" }
     );
 
-    res.json({
+    res.status(200).json({
         message: "Login successful",
         token
     });

@@ -6,58 +6,92 @@ async function signup() {
   signupBtn.innerText = "Creating account...";
   signupBtn.disabled = true;
 
-  const username = document.getElementById("username").value;
-  const password = document.getElementById("password").value;
+  try {
 
-  const res = await fetch(`${BASE_URL}/signup`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ username, password })
-  });
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
 
-  const data = await res.json();
+    const res = await fetch(`${BASE_URL}/signup`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ username, password })
+    });
 
-  document.getElementById("message").innerText = data.message;
+    const data = await res.json();
 
-  if (data.message === "User created successfully") {
-    window.location.href = "index.html";
+    document.getElementById("message").innerText = data.message;
+
+    if (res.ok) {
+      window.location.href = "index.html";
+    }
+
+  } catch (error) {
+
+    console.log(error);
+
+    document.getElementById("message").innerText =
+      "Something went wrong";
+
+  } finally {
+
+    signupBtn.innerText = "Signup";
+    signupBtn.disabled = false;
+
   }
-
-  signupBtn.innerText = "Signup";
-  signupBtn.disabled = false;
 }
 
 async function login() {
+
   const loginBtn = document.getElementById("loginBtn");
 
   loginBtn.innerText = "Logging in...";
   loginBtn.disabled = true;
 
-  const username = document.getElementById("loginUsername").value;
-  const password = document.getElementById("loginPassword").value;
+  try {
 
-  const res = await fetch(`${BASE_URL}/login`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ username, password })
-  });
+    const username =
+      document.getElementById("loginUsername").value;
 
-  const data = await res.json();
+    const password =
+      document.getElementById("loginPassword").value;
 
-  document.getElementById("loginMessage").innerText = data.message;
+    const res = await fetch(`${BASE_URL}/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ username, password })
+    });
 
-  if (data.token) {
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("username", username);
-    window.location.href = "dashboard.html";
+    const data = await res.json();
+
+    document.getElementById("loginMessage").innerText =
+      data.message;
+
+    if (res.ok && data.token) {
+
+      localStorage.setItem("token", data.token);
+
+      localStorage.setItem("username", username);
+
+      window.location.href = "dashboard.html";
+    }
+
+  } catch (error) {
+
+    console.log(error);
+
+    document.getElementById("loginMessage").innerText =
+      "Something went wrong";
+
+  } finally {
+
+    loginBtn.innerText = "Login";
+    loginBtn.disabled = false;
+
   }
-
-  loginBtn.innerText = "Login";
-  loginBtn.disabled = false;
 }
 
 async function getProfile() {
