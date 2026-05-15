@@ -135,3 +135,5 @@ Open frontend files using Live Server.
 # 🌍 Live Demo
 
 (https://notes-app-x97.netlify.app/)
+
+# Learning Git branches
